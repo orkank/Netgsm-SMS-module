@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="idangerous_bulk_sms" resource="default" engine="innodb" comment="IDangerous Bulk SMS Table">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
+                comment="Entity ID"/>
+        <column xsi:type="text" name="message" nullable="false" comment="SMS Message"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="32" default="pending"
+                comment="Job Status"/>
+        <column xsi:type="text" name="filters" nullable="true" comment="Applied Filters (JSON)"/>
+        <column xsi:type="int" name="total_recipients" unsigned="true" nullable="false" default="0"
+                comment="Total Recipients Count"/>
+        <column xsi:type="int" name="processed_count" unsigned="true" nullable="false" default="0"
+                comment="Processed Recipients Count"/>
+        <column xsi:type="int" name="success_count" unsigned="true" nullable="false" default="0"
+                comment="Successfully Sent Count"/>
+        <column xsi:type="int" name="error_count" unsigned="true" nullable="false" default="0"
+                comment="Failed Send Count"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <index referenceId="NETGSM_BULK_SMS_STATUS">
+            <column name="status"/>
+        </index>
+    </table>
+    <table name="idangerous_bulk_sms_detail" resource="default" engine="innodb" comment="IDangerous Bulk SMS Detail Table">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
+                comment="Entity ID"/>
+        <column xsi:type="int" name="bulk_sms_id" unsigned="true" nullable="false" comment="Bulk SMS ID"/>
+        <column xsi:type="varchar" name="phone" nullable="false" length="32" comment="Phone Number"/>
+        <column xsi:type="varchar" name="message_id" nullable="true" length="64" comment="IDangerous Message ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="32" default="pending"
+                comment="Send Status"/>
+        <column xsi:type="text" name="error" nullable="true" comment="Error Message"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Updated At"/>
+        <column xsi:type="timestamp" name="expires_at" on_update="false" nullable="true"
+                comment="Record Expiry Date"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="NETGSM_BULK_SMS_DETAIL_BULK_SMS_ID_NETGSM_BULK_SMS_ENTITY_ID"
+                    table="idangerous_bulk_sms_detail" column="bulk_sms_id" referenceTable="idangerous_bulk_sms"
+                    referenceColumn="entity_id" onDelete="CASCADE"/>
+        <index referenceId="NETGSM_BULK_SMS_DETAIL_BULK_SMS_ID">
+            <column name="bulk_sms_id"/>
+        </index>
+        <index referenceId="NETGSM_BULK_SMS_DETAIL_STATUS">
+            <column name="status"/>
+        </index>
+        <index referenceId="NETGSM_BULK_SMS_DETAIL_MESSAGE_ID">
+            <column name="message_id"/>
+        </index>
+        <index referenceId="NETGSM_BULK_SMS_DETAIL_EXPIRES_AT">
+            <column name="expires_at"/>
+        </index>
+    </table>
+</schema>

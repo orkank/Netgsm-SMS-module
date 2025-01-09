@@ -1,6 +1,6 @@
-# IDangerous SMS Integration for Magento 2
+# SMS Integration for Magento 2
 
-This module provides SMS functionality for Magento 2 using the IDangerous API, allowing bulk SMS sending to customers based on various filters.
+This module provides SMS functionality for Magento 2 using the Netgsm API, allowing bulk SMS sending to customers based on various filters.
 
 ## Features
 
@@ -20,7 +20,6 @@ This module provides SMS functionality for Magento 2 using the IDangerous API, a
 
 ### Via Composer
 ```bash
-composer require idangerous/module-sms
 php bin/magento module:enable IDangerous_Sms
 php bin/magento setup:upgrade
 php bin/magento setup:di:compile
