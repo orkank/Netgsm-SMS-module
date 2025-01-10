@@ -1,0 +1,99 @@
+"Customer Name","Customer Name"
+"First Name","First Name"
+"Last Name","Last Name"
+Email,Email
+"Date of Birth","Date of Birth"
+Gender,Gender
+"Phone Number","Phone Number"
+"Invalid bulk SMS ID","Invalid bulk SMS ID"
+"Bulk SMS not found","Bulk SMS not found"
+"Only pending bulk SMS can be cancelled","Only pending bulk SMS can be cancelled"
+"Bulk SMS has been cancelled.","Bulk SMS has been cancelled."
+"SMS Dashboard","SMS Dashboard"
+"Bulk SMS not found.","Bulk SMS not found."
+"Bulk SMS Details","Bulk SMS Details"
+"Message ID is required","Message ID is required"
+"Bulk SMS","Bulk SMS"
+"Retried %1 failed messages. Success: %2, Failed: %3","Retried %1 failed messages. Success: %2, Failed: %3"
+"Message is required.","Message is required."
+"No recipients found matching the selected criteria.","No recipients found matching the selected criteria."
+"Bulk SMS job has been created for %1 recipients.","Bulk SMS job has been created for %1 recipients."
+"Send SMS","Send SMS"
+"Phone number and message are required.","Phone number and message are required."
+"Failed to send SMS.","Failed to send SMS."
+"SMS sent successfully.","SMS sent successfully."
+"An error occurred while sending SMS.","An error occurred while sending SMS."
+"NetGSM password is not configured. Please check your IYS module configuration.","NetGSM password is not configured. Please check your IYS module configuration."
+"SMS sent successfully","SMS sent successfully"
+"Invalid username or password","Invalid username or password"
+"Invalid message header","Invalid message header"
+"Invalid phone number format","Invalid phone number format"
+"Error code: %1","Error code: %1"
+"Failed to send SMS: %1","Failed to send SMS: %1"
+"IDangerous credentials are not configured.","IDangerous credentials are not configured."
+"Invalid message content","Invalid message content"
+"Invalid username/password","Invalid username/password"
+"Insufficient balance","Insufficient balance"
+"Invalid parameter error","Invalid parameter error"
+"Unknown error: %1","Unknown error: %1"
+Pending,Pending
+Sent,Sent
+Failed,Failed
+Processing,Processing
+Completed,Completed
+"View Details","View Details"
+Cancel,Cancel
+"Cancel Bulk SMS","Cancel Bulk SMS"
+"Are you sure you want to cancel this bulk SMS?","Are you sure you want to cancel this bulk SMS?"
+"Bulk SMS Configuration","Bulk SMS Configuration"
+Message,Message
+"Available Variables:","Available Variables:"
+"Customer Groups","Customer Groups"
+"Order History","Order History"
+"Any time","Any time"
+"Last 7 days","Last 7 days"
+"Last 30 days","Last 30 days"
+"Last 90 days","Last 90 days"
+"Last year","Last year"
+"Minimum Purchase Count","Minimum Purchase Count"
+"Customer Type","Customer Type"
+All,All
+"Registered Only","Registered Only"
+"Guest Only","Guest Only"
+"An error occurred while sending SMS","An error occurred while sending SMS"
+"Response Details","Response Details"
+"Try Again","Try Again"
+"No SMS result found.","No SMS result found."
+"The SMS module is currently disabled. Please enable it in the configuration.","The SMS module is currently disabled. Please enable it in the configuration."
+"Send Single SMS","Send Single SMS"
+"Format: 5XXXXXXXXXX","Format: 5XXXXXXXXXX"
+"Message Header: %1","Message Header: %1"
+"Message Status","Message Status"
+Close,Close
+Phone,Phone
+Status,Status
+Operator,Operator
+"Message Count","Message Count"
+"Delivery Date","Delivery Date"
+"Job ID","Job ID"
+Error,Error
+SMS,SMS
+"Send Bulk SMS","Send Bulk SMS"
+"IDangerous","IDangerous"
+"SMS Settings","SMS Settings"
+"General Configuration","General Configuration"
+"Enable Module","Enable Module"
+"Message Header","Message Header"
+"Enable Debug Logging","Enable Debug Logging"
+ID,ID
+"Message ID","Message ID"
+"Created At","Created At"
+"Updated At","Updated At"
+"Error Message","Error Message"
+"Create New Bulk SMS","Create New Bulk SMS"
+"Retry Failed Messages","Retry Failed Messages"
+"Total Recipients","Total Recipients"
+Processed,Processed
+Success,Success
+"Scheduled At","Scheduled At"
+Actions,Actions

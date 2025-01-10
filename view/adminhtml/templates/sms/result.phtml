@@ -1,0 +1,58 @@
+<?php
+/** @var \IDangerous\Sms\Block\Adminhtml\Sms\Result $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$result = $block->getSmsResult();
+?>
+<div class="sms-result">
+    <?php if ($result): ?>
+        <?php if ($result['success']): ?>
+            <div class="message message-success success">
+                <div><?= $escaper->escapeHtml(__('SMS sent successfully')) ?></div>
+            </div>
+        <?php else: ?>
+            <div class="message message-error error">
+                <div><?= $escaper->escapeHtml($result['error'] ?? __('An error occurred while sending SMS')) ?></div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($result['phone'])): ?>
+            <div class="admin__field">
+                <label class="admin__field-label"><?= $escaper->escapeHtml(__('Phone Number')) ?></label>
+                <div class="admin__field-control">
+                    <?= $escaper->escapeHtml($result['phone']) ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($result['message'])): ?>
+            <div class="admin__field">
+                <label class="admin__field-label"><?= $escaper->escapeHtml(__('Message')) ?></label>
+                <div class="admin__field-control">
+                    <?= $escaper->escapeHtml($result['message']) ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($result['response'])): ?>
+            <div class="admin__field">
+                <label class="admin__field-label"><?= $escaper->escapeHtml(__('Response Details')) ?></label>
+                <div class="admin__field-control">
+                    <pre><?= $escaper->escapeHtml(json_encode($result['response'], JSON_PRETTY_PRINT)) ?></pre>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <div class="admin__field">
+            <div class="admin__field-control">
+                <a class="action-default" href="<?= $escaper->escapeUrl($block->getUrl('*/*/send')) ?>">
+                    <?= $escaper->escapeHtml(__('Try Again')) ?>
+                </a>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="message message-error error">
+            <div><?= $escaper->escapeHtml(__('No SMS result found.')) ?></div>
+        </div>
+    <?php endif; ?>
+</div>

@@ -1,0 +1,92 @@
+"Invalid bulk SMS ID"	"Geçersiz toplu SMS kimliği"
+"Bulk SMS not found"	"Toplu SMS bulunamadı"
+"Only pending bulk SMS can be cancelled"	"Yalnızca bekleyen toplu SMS'ler iptal edilebilir"
+"Bulk SMS has been cancelled."	"Toplu SMS iptal edildi."
+"SMS Dashboard"	"SMS Paneli"
+"Bulk SMS not found."	"Toplu SMS bulunamadı."
+"Bulk SMS Details"	"Toplu SMS Detayları"
+"Message ID is required"	"Mesaj kimliği gereklidir"
+"Bulk SMS"	"Toplu SMS"
+"Retried %1 failed messages. Success: %2, Failed: %3"	"%1 başarısız mesaj yeniden denendi. Başarılı: %2, Başarısız: %3"
+"Message is required."	"Mesaj gereklidir."
+"No recipients found matching the selected criteria."	"Seçilen kriterlere uygun alıcı bulunamadı."
+"Bulk SMS job has been created for %1 recipients."	"%1 alıcı için toplu SMS görevi oluşturuldu."
+"Send SMS"	"SMS Gönder"
+"Phone number and message are required."	"Telefon numarası ve mesaj gereklidir."
+"Failed to send SMS."	"SMS gönderilemedi."
+"SMS sent successfully."	"SMS başarıyla gönderildi."
+"An error occurred while sending SMS."	"SMS gönderilirken bir hata oluştu."
+"NetGSM password is not configured. Please check your IYS module configuration."	"NetGSM şifresi yapılandırılmamış. Lütfen IYS modül yapılandırmanızı kontrol edin."
+"SMS sent successfully"	"SMS başarıyla gönderildi"
+"Invalid username or password"	"Geçersiz kullanıcı adı veya şifre"
+"Invalid message header"	"Geçersiz mesaj başlığı"
+"Invalid phone number format"	"Geçersiz telefon numarası formatı"
+"Error code: %1"	"Hata kodu: %1"
+"Failed to send SMS: %1"	"SMS gönderilemedi: %1"
+"IDangerous credentials are not configured."	"IDangerous kimlik bilgileri yapılandırılmamış."
+"Invalid message content"	"Geçersiz mesaj içeriği"
+"Invalid username/password"	"Geçersiz kullanıcı adı/şifre"
+"Insufficient balance"	"Yetersiz bakiye"
+"Invalid parameter error"	"Geçersiz parametre hatası"
+"Unknown error: %1"	"Bilinmeyen hata: %1"
+Pending	Beklemede
+Sent	Gönderildi
+Failed	Başarısız
+Processing	İşleniyor
+Completed	Tamamlandı
+"View Details"	"Detayları Gör"
+Cancel	İptal Et
+"Cancel Bulk SMS"	"Toplu SMS'i İptal Et"
+"Are you sure you want to cancel this bulk SMS?"	"Bu toplu SMS'i iptal etmek istediğinizden emin misiniz?"
+"Bulk SMS Configuration"	"Toplu SMS Yapılandırması"
+Message	Mesaj
+"Customer Groups"	"Müşteri Grupları"
+"Order History"	"Sipariş Geçmişi"
+"Any time"	"Her zaman"
+"Last 7 days"	"Son 7 gün"
+"Last 30 days"	"Son 30 gün"
+"Last 90 days"	"Son 90 gün"
+"Last year"	"Geçen yıl"
+"Minimum Purchase Count"	"Minimum Satın Alma Sayısı"
+"Customer Type"	"Müşteri Türü"
+All	Hepsi
+"Registered Only"	"Yalnızca Kayıtlı"
+"Guest Only"	"Yalnızca Misafir"
+"An error occurred while sending SMS"	"SMS gönderilirken bir hata oluştu"
+"Phone Number"	"Telefon Numarası"
+"Response Details"	"Yanıt Detayları"
+"Try Again"	"Tekrar Dene"
+"No SMS result found."	"SMS sonucu bulunamadı."
+"The SMS module is currently disabled. Please enable it in the configuration."	"SMS modülü şu anda devre dışı. Lütfen yapılandırmadan etkinleştirin."
+"Send Single SMS"	"Tekli SMS Gönder"
+"Format: 5XXXXXXXXXX"	"Format: 5XXXXXXXXXX"
+"Message Header: %1"	"Mesaj Başlığı: %1"
+"Message Status"	"Mesaj Durumu"
+Close	Kapat
+Phone	Telefon
+Status	Durum
+Operator	Operatör
+"Message Count"	"Mesaj Sayısı"
+"Delivery Date"	"Teslim Tarihi"
+"Job ID"	"Görev Kimliği"
+Error	Hata
+SMS	SMS
+"Send Bulk SMS"	"Toplu SMS Gönder"
+"IDangerous"	"IDangerous"
+"SMS Settings"	"SMS Ayarları"
+"General Configuration"	"Genel Yapılandırma"
+"Enable Module"	"Modülü Etkinleştir"
+"Message Header"	"Mesaj Başlığı"
+"Enable Debug Logging"	"Hata Ayıklama Günlüğünü Etkinleştir"
+ID	Kimlik
+"Message ID"	"Mesaj Kimliği"
+"Created At"	"Oluşturulma Tarihi"
+"Updated At"	"Güncelleme Tarihi"
+"Error Message"	"Hata Mesajı"
+"Create New Bulk SMS"	"Yeni Toplu SMS Oluştur"
+"Retry Failed Messages"	"Başarısız Mesajları Yeniden Dene"
+"Total Recipients"	"Toplam Alıcı Sayısı"
+Processed	İşlendi
+Success	Başarılı
+"Scheduled At"	"Zamanlanan Tarih"
+Actions	İşlemler

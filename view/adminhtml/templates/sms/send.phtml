@@ -1,0 +1,73 @@
+<?php
+/** @var \IDangerous\Sms\Block\Adminhtml\Sms\Send $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+
+<?php if (!$block->isEnabled()): ?>
+    <div class="message message-warning warning">
+        <div><?= $escaper->escapeHtml(__('The SMS module is currently disabled. Please enable it in the configuration.')) ?></div>
+    </div>
+<?php return; endif; ?>
+
+<form class="form" id="sms-send-form" method="post" data-mage-init='{"validation": {}, "IDangerous_Sms/js/send-form": {}}' action="<?= $block->getUrl('*/*/sendPost') ?>">
+    <?= $block->getBlockHtml('formkey') ?>
+    <fieldset class="admin__fieldset">
+        <legend class="admin__legend">
+            <span><?= $escaper->escapeHtml(__('Send Single SMS')) ?></span>
+        </legend>
+        <br>
+
+        <div class="admin__field field">
+            <label class="admin__field-label" for="phone">
+                <span><?= $escaper->escapeHtml(__('Phone Number')) ?></span>
+            </label>
+            <div class="admin__field-control">
+                <input type="text"
+                       id="phone"
+                       name="phone"
+                       class="admin__control-text required-entry validate-phone"
+                       data-validate="{required:true}"
+                />
+                <div class="note"><?= $escaper->escapeHtml(__('Format: 5XXXXXXXXXX')) ?></div>
+            </div>
+        </div>
+
+        <div class="admin__field field">
+            <label class="admin__field-label" for="message">
+                <span><?= $escaper->escapeHtml(__('Message')) ?></span>
+            </label>
+            <div class="admin__field-control">
+                <textarea id="message"
+                          name="message"
+                          class="admin__control-textarea required-entry"
+                          rows="5"
+                          data-validate="{required:true}"
+                ></textarea>
+                <div class="note">
+                    <?= $escaper->escapeHtml(__('Message Header: %1', $block->getMsgHeader())) ?>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="page-main-actions">
+        <div class="page-actions">
+            <div class="page-actions-buttons">
+                <button type="submit"
+                        class="action-default primary"
+                        title="<?= $escaper->escapeHtmlAttr(__('Send SMS')) ?>">
+                    <span><?= $escaper->escapeHtml(__('Send SMS')) ?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/x-magento-init">
+{
+    "#sms-send-form": {
+        "validation": {},
+        "IDangerous_Sms/js/send-form": {}
+    }
+}
+</script>
