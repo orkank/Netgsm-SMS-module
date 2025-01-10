@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <tab id="idangerous" translate="label" sortOrder="200">
-            <label>IDangerous Services</label>
+            <label>IDangerous</label>
         </tab>
         <section id="idangerous_sms" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>SMS Settings</label>

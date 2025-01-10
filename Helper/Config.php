@@ -11,14 +11,13 @@ use Magento\Framework\Encryption\EncryptorInterface;
 
 class Config extends AbstractHelper
 {
-    // private const XML_PATH_ENABLED = 'idangerous_sms/general/enabled';
+    private const XML_PATH_ENABLED = 'idangerous_sms/general/enabled';
     private const XML_PATH_MSG_HEADER = 'idangerous_sms/general/msgheader';
-    // private const XML_PATH_DEBUG_LOGGING = 'idangerous_sms/general/debug_logging';
+    private const XML_PATH_DEBUG_LOGGING = 'idangerous_sms/general/debug_logging';
     private const XML_PATH_USERNAME = 'netgsm_iys/general/username';
     private const XML_PATH_PASSWORD = 'netgsm_iys/general/password';
     private const XML_PATH_BRAND_CODE = 'netgsm_iys/general/brand_code';
     private const XML_PATH_APP_KEY = 'netgsm_iys/general/app_key';
-    private const XML_PATH_ENABLED = true;
 
     /**
      * @var EncryptorInterface
@@ -27,7 +26,6 @@ class Config extends AbstractHelper
 
     /**
      * @param Context $context
-    //  * @param IysConfig $iysConfig
      * @param EncryptorInterface $encryptor
      */
     public function __construct(

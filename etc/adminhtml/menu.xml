@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
         <add id="IDangerous_Sms::sms"
-             title="SMS"
+             title="iDangerous"
              translate="title"
              module="IDangerous_Sms"
              sortOrder="50"
@@ -22,7 +22,7 @@
         <add id="IDangerous_Sms::send_sms"
              title="Send SMS"
              module="IDangerous_Sms"
-             sortOrder="10"
+             sortOrder="20"
              parent="IDangerous_Sms::sms"
              action="idangerous_sms/sms/send"
              resource="IDangerous_Sms::send_sms"/>
@@ -31,7 +31,7 @@
              title="Send Bulk SMS"
              translate="title"
              module="IDangerous_Sms"
-             sortOrder="20"
+             sortOrder="30"
              parent="IDangerous_Sms::sms"
              action="idangerous_sms/bulk/index"
              resource="IDangerous_Sms::bulk_sms"/>
