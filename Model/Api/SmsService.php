@@ -12,6 +12,7 @@ class SmsService implements SmsServiceInterface
 {
     private const API_ENDPOINT = 'https://api.netgsm.com.tr/sms/send/get';
     private const XML_API_ENDPOINT = 'https://api.netgsm.com.tr/sms/send/xml';
+    private const OTP_API_ENDPOINT = 'https://api.netgsm.com.tr/sms/send/otp';
 
     /**
      * @var Config
@@ -342,6 +343,159 @@ class SmsService implements SmsServiceInterface
                     'message' => __('Error code: %1', $code),
                     'code' => $code
                 ];
+        }
+    }
+
+    /**
+     * Send OTP SMS
+     *
+     * @param string $phone
+     * @param string $message
+     * @return array
+     */
+    public function sendOtpSms(string $phone, string $message): array
+    {
+        try {
+            if (empty($phone) || empty($message)) {
+                return [
+                    'success' => false,
+                    'message' => __('Phone number and message are required.')
+                ];
+            }
+
+            // Clean and format phone number
+            $phone = preg_replace('/[^0-9]/', '', $phone);
+            if (strlen($phone) !== 10) {
+                return [
+                    'success' => false,
+                    'message' => __('Invalid phone number format. Must be 10 digits.')
+                ];
+            }
+
+            // Build XML string directly
+            $xml = '<?xml version="1.0"?>
+            <mainbody>
+               <header>
+                   <usercode>' . $this->config->getUsername() . '</usercode>
+                   <password>' . $this->config->getPassword() . '</password>
+                   <msgheader>' . $this->config->getMsgHeader() . '</msgheader>
+                   <appkey>' . $this->config->getAppKey() . '</appkey>
+               </header>
+               <body>
+                   <msg><![CDATA[' . $message . ']]></msg>
+                   <no>' . $phone . '</no>
+               </body>
+            </mainbody>';
+
+            $response = $this->sendOtpRequest($xml);
+            return $this->parseOtpResponse($response);
+
+        } catch (\Exception $e) {
+            $this->logger->error('OTP SMS Service Error: ' . $e->getMessage(), [
+                'phone' => $phone,
+                'message' => $message
+            ]);
+
+            return [
+                'success' => false,
+                'message' => __('Failed to send OTP SMS: %1', $e->getMessage())
+            ];
+        }
+    }
+
+    /**
+     * Send OTP XML request to API
+     *
+     * @param string $xmlData
+     * @return string
+     */
+    private function sendOtpRequest(string $xmlData): string
+    {
+        $this->curl->addHeader('Content-Type', 'text/xml');
+        $this->curl->setOption(CURLOPT_SSL_VERIFYHOST, 2);
+        $this->curl->setOption(CURLOPT_SSL_VERIFYPEER, 0);
+        $this->curl->setOption(CURLOPT_TIMEOUT, 30);
+
+        $this->curl->post(self::OTP_API_ENDPOINT, $xmlData);
+
+        return $this->curl->getBody();
+    }
+
+    /**
+     * Parse OTP API response
+     *
+     * @param string $response
+     * @return array
+     */
+    private function parseOtpResponse(string $response): array
+    {
+        try {
+            $xml = new \SimpleXMLElement($response);
+            $code = (string)$xml->main->code;
+
+            switch ($code) {
+                case '0':
+                    return [
+                        'success' => true,
+                        'message' => __('OTP SMS sent successfully'),
+                        'jobId' => (string)$xml->main->jobID
+                    ];
+                case '20':
+                    return [
+                        'success' => false,
+                        'message' => __('Invalid message text or length')
+                    ];
+                case '30':
+                    return [
+                        'success' => false,
+                        'message' => __('Invalid username or password')
+                    ];
+                case '40':
+                case '41':
+                    return [
+                        'success' => false,
+                        'message' => __('Invalid message header')
+                    ];
+                case '50':
+                case '52':
+                    return [
+                        'success' => false,
+                        'message' => __('Invalid phone number')
+                    ];
+                case '60':
+                    return [
+                        'success' => false,
+                        'message' => __('No OTP SMS package defined for account')
+                    ];
+                case '70':
+                    return [
+                        'success' => false,
+                        'message' => __('Invalid input parameters')
+                    ];
+                case '80':
+                    return [
+                        'success' => false,
+                        'message' => __('Rate limit exceeded (max 100 per minute)')
+                    ];
+                case '100':
+                    return [
+                        'success' => false,
+                        'message' => __('System error')
+                    ];
+                default:
+                    return [
+                        'success' => false,
+                        'message' => __('Unknown error code: %1', $code)
+                    ];
+            }
+        } catch (\Exception $e) {
+            $this->logger->error('Error parsing OTP response: ' . $e->getMessage(), [
+                'response' => $response
+            ]);
+            return [
+                'success' => false,
+                'message' => __('Failed to parse OTP response')
+            ];
         }
     }
 }

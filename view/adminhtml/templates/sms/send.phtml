@@ -33,6 +33,22 @@
         </div>
 
         <div class="admin__field field">
+            <label class="admin__field-label" for="is_otp">
+                <span><?= $escaper->escapeHtml(__('Send as OTP')) ?></span>
+            </label>
+            <div class="admin__field-control">
+                <input type="checkbox"
+                       id="is_otp"
+                       name="is_otp"
+                       value="1"
+                       style="opacity: 1; position: relative;"
+                       class="admin__control-checkbox"
+                />
+                <div class="note" style="display: block;"><?= $escaper->escapeHtml(__('Send this message as an OTP verification code')) ?></div>
+            </div>
+        </div>
+
+        <div class="admin__field field">
             <label class="admin__field-label" for="message">
                 <span><?= $escaper->escapeHtml(__('Message')) ?></span>
             </label>

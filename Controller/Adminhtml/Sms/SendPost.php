@@ -9,6 +9,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 use IDangerous\Sms\Model\Api\SmsService;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Exception\LocalizedException;
 
 class SendPost extends Action
 {
@@ -48,35 +49,54 @@ class SendPost extends Action
     /**
      * Execute action
      *
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
      */
     public function execute()
     {
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+        $resultRedirect = $this->resultRedirectFactory->create();
 
         try {
-            $phone = $this->getRequest()->getParam('phone'); // Changed from 'phone' to 'phone_number'
-            $message = $this->getRequest()->getParam('message');
+            $data = $this->getRequest()->getPostValue();
 
-            if (empty($phone) || empty($message)) {
-              $this->messageManager->addErrorMessage(__('Phone number and message are required.'));
-              return $resultRedirect->setPath('*/*/send');
+            if (empty($data['phone']) || empty($data['message'])) {
+                throw new LocalizedException(__('Phone number and message are required.'));
             }
 
-            $result = $this->smsService->sendSms($phone, $message);
+            // Check if this is an OTP SMS
+            $isOtp = !empty($data['is_otp']);
+
+            if ($isOtp) {
+                $result = $this->smsService->sendOtpSms(
+                    $data['phone'],
+                    $data['message']
+                );
+            } else {
+                $result = $this->smsService->sendSms(
+                    $data['phone'],
+                    $data['message']
+                );
+            }
 
             if (!$result['success']) {
-                $this->messageManager->addErrorMessage($result['message'] ?? __('Failed to send SMS.'));
-                return $resultRedirect->setPath('*/*/send');
+                throw new LocalizedException(__($result['message']));
             }
 
-            $this->messageManager->addSuccessMessage(__('SMS sent successfully.'));
+            $this->messageManager->addSuccessMessage(
+                __('SMS sent successfully') .
+                ($isOtp ? ' ' . __('(OTP)') : '') .
+                (isset($result['jobId']) ? ' JobID: ' . $result['jobId'] : '')
+            );
+
             return $resultRedirect->setPath('*/*/send');
 
+        } catch (LocalizedException $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
         } catch (\Exception $e) {
-            $this->messageManager->addExceptionMessage($e, __('An error occurred while sending SMS.'));
-            return $resultRedirect->setPath('*/*/send');
+            $this->messageManager->addExceptionMessage($e, __('An error occurred while sending the SMS.'));
         }
+
+        return $resultRedirect->setPath('*/*/send');
     }
 
     /**

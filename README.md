@@ -115,6 +115,49 @@ Common log entries:
 - `idangerous_bulk_sms`: SMS campaigns
 - `idangerous_bulk_sms_detail`: Individual SMS records (2-month retention)
 
+## SMS Types and Usage
+
+### Regular SMS
+```php
+/** @var \IDangerous\Sms\Model\Api\SmsService $smsService */
+$result = $smsService->sendSms(
+    '5321234567',  // Phone number
+    'Your message' // Message content
+);
+
+if ($result['success']) {
+    // SMS sent successfully
+    $messageId = $result['bulkId'];
+} else {
+    // Handle error
+    $errorMessage = $result['message'];
+}
+```
+
+### OTP (One-Time Password) SMS
+```php
+/** @var \IDangerous\Sms\Model\Api\SmsService $smsService */
+$result = $smsService->sendOtpSms(
+    '5321234567',                          // Phone number
+    'Your verification code is: 123456'     // Message content (max 160 chars)
+);
+
+if ($result['success']) {
+    // OTP SMS sent successfully
+    $jobId = $result['jobId'];
+} else {
+    // Handle error
+    $errorMessage = $result['message'];
+}
+```
+
+**OTP SMS Notes:**
+- Maximum message length: 160 characters
+- Returns unique jobId for tracking
+- Higher priority delivery
+- Requires OTP package from Netgsm
+- Rate limit: 100 messages per minute
+
 ## Support
 
 For technical support:
@@ -126,4 +169,4 @@ For technical support:
 
 [MIT License](LICENSE.md)
 
-[Developer: Orkan Köylü](https://github.com/orkank)
+[Developer: Orkan Köylü](orkan.koylu@gmail.com)

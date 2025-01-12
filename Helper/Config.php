@@ -68,6 +68,20 @@ class Config extends AbstractHelper
         );
     }
 
+        /**
+     * Get app key
+     *
+     * @return string|null
+     */
+      public function getAppKey(?int $storeId = null): ?string
+      {
+        return (string)$this->scopeConfig->getValue(
+          self::XML_PATH_APP_KEY,
+          ScopeInterface::SCOPE_STORE,
+          $storeId
+        );
+      }
+
     /**
      * Get username from IYS module
      *
