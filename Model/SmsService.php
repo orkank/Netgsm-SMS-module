@@ -317,7 +317,7 @@ class SmsService implements SmsServiceInterface
             $this->curl->post($url, $params);
             $response = $this->curl->getBody();
 
-            $this->logger->info('IDangerous Status API response', ['response' => $response]);
+            $this->logger->info('Status API response', ['response' => $response]);
 
             $responseData = json_decode($response, true);
 

@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 
 class SmsService implements SmsServiceInterface
 {
-    private const API_ENDPOINT = 'https://api.idangerous.com.tr/sms/send/get';
+    private const API_ENDPOINT = 'https://api.netgsm.com.tr/sms/send/get';
     private const XML_API_ENDPOINT = 'https://api.netgsm.com.tr/sms/send/xml';
 
     /**

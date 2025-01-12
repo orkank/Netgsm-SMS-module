@@ -2,35 +2,43 @@
 
 This module provides SMS functionality for Magento 2 using the Netgsm API, allowing bulk SMS sending to customers based on various filters.
 
+## Important Note
+
+This module requires the Netgsm IYS Module to be installed first:
+- Repository: [Netgsm-IYS-module](https://github.com/orkank/Netgsm-IYS-module/)
+- This dependency is required for proper phone number validation and IYS compliance
+
 ## Features
 
-- Bulk SMS sending to customers
-- Customer filtering by:
+- Bulk SMS sending to customers (1:n and n:n support)
+- Customer filtering options:
   - Customer groups
   - Customer type (guest/registered)
-  - Order history
-  - Purchase count
+  - Order history (last 30, 90, 180, 365 days)
+  - Minimum purchase count
 - SMS status tracking with detailed modal view
-- Message queue based processing
-- Detailed reporting
-- Manual and automated processing
-- Automatic cleanup of old SMS records (2 months expiry)
+- Cron-based processing with lock mechanism
+- Detailed reporting and status monitoring
+- Automatic cleanup of old SMS records (2 months retention)
+- IYS (İleti Yönetim Sistemi) integration
 
-## Installation
+## Manual Installation
 
-### Via Composer
+1. First, install the required IYS module:
 ```bash
-php bin/magento module:enable IDangerous_Sms
-php bin/magento setup:upgrade
-php bin/magento setup:di:compile
-php bin/magento cache:clean
+mkdir -p app/code/IDangerous/NetgsmIYS
+# Copy Netgsm-IYS-module files to this directory
 ```
 
-### Manual Installation
-1. Create directory `app/code/IDangerous/Sms`
-2. Download and extract module in that directory
-3. Enable the module:
+2. Then install this SMS module:
 ```bash
+mkdir -p app/code/IDangerous/Sms
+# Copy SMS module files to this directory
+```
+
+3. Enable both modules:
+```bash
+php bin/magento module:enable IDangerous_NetgsmIYS
 php bin/magento module:enable IDangerous_Sms
 php bin/magento setup:upgrade
 php bin/magento setup:di:compile
@@ -39,131 +47,83 @@ php bin/magento cache:clean
 
 ## Configuration
 
-1. Go to Admin Panel > Stores > Configuration > IDangerous > SMS Settings
-2. Configure:
-   - API Username
-   - API Password
-   - Sender ID
-   - Other settings
+1. Navigate to: Admin Panel > Stores > Configuration > IDangerous > SMS Settings
 
-## Usage
+2. Available settings:
+   - Message Header (Sender ID)
+   - Debug Logging (Enable/Disable)
 
-### Sending Bulk SMS
+## Terminal Commands
 
-1. Navigate to Marketing > SMS > Send Bulk SMS
-2. Fill in:
-   - Message content
-   - Select customer filters:
-     - Customer groups
-     - Customer type
-     - Order period
-     - Minimum purchase count
-3. Click "Send Bulk SMS"
-4. Monitor progress in the grid
+Process pending SMS jobs manually:
+```bash
+php bin/magento idangerous:sms:process
+```
 
-### Monitoring SMS Status
+Clean old SMS records (older than 2 months):
+```bash
+php bin/magento idangerous:sms:clean
+```
 
+## Monitoring SMS Sending
+
+### Dashboard
 1. Go to Marketing > SMS > SMS Dashboard
 2. View all SMS campaigns and their statuses
-3. Click on Message ID to view detailed delivery status
-4. Monitor success/failure rates
+3. Status types:
+   - Pending: Waiting to be processed
+   - Processing: Currently being sent
+   - Completed: All messages sent
+   - Failed: Error occurred during sending
 
-### Data Retention
-
-- SMS delivery details are automatically removed after 2 months
-- This helps maintain database performance and comply with data retention policies
-- Historical data can be exported before expiry if needed
-
-### Manual Processing
-
-To manually process pending SMS jobs:
-
-```bash
-php bin/magento queue:consumers:start idangerousSmsConsumer
-```
-
-## Message Queue
-
-The module uses Magento's Message Queue framework for asynchronous processing:
-- Queue: `idangerous_sms`
-- Consumer: `idangerousSmsConsumer`
-- Topic: `idangerous.sms.bulk`
-
-## Database Tables
-
-- `idangerous_bulk_sms`: Stores bulk SMS campaigns
-- `idangerous_bulk_sms_detail`: Stores individual SMS send attempts (with 2-month expiry)
-
-## Commands
-
-```bash
-# Start message queue consumer
-php bin/magento queue:consumers:start idangerousSmsConsumer
-
-# Clear module cache
-php bin/magento cache:clean
-
-# Recompile if you make code changes
-php bin/magento setup:di:compile
-
-# Check module status
-php bin/magento module:status IDangerous_Sms
-```
-
-## Troubleshooting
-
-1. **SMS Not Sending**
-   - Check API credentials in configuration
-   - Verify customer filters
-   - Check logs for errors
-   - Ensure message queue consumer is running
-
-2. **Processing Stuck**
-   - Check message queue status
-   - Run consumer manually
-   - Check system logs
-
-3. **Permission Issues**
-   - Verify admin user permissions
-   - Check ACL configuration
+### Detailed View
+Click on any campaign row to view:
+- Individual message statuses
+- Delivery timestamps
+- Error messages (if any)
+- Recipient details
 
 ## Logging
 
-###
+Logs are stored in: `var/log/idangerous_sms.log`
 
-## Development
-
-### Adding New Features
-
-1. Create new controllers in `Controller/Adminhtml/`
-2. Add routes in `etc/adminhtml/routes.xml`
-3. Update ACL in `etc/acl.xml`
-
-### Custom Filters
-
-Extend `BulkRecipientService` to add new filtering options.
-
-### Testing
-
-1. Enable developer mode:
-
-```bash
-php bin/magento deploy:mode:set developer
-```
-
-2. Monitor logs while testing:
-
+Monitor logs in real-time:
 ```bash
 tail -f var/log/idangerous_sms.log
 ```
 
+Common log entries:
+- SMS sending attempts
+- API responses
+- Processing errors
+- Cron execution status
+
+## Troubleshooting
+
+1. **SMS Processing Issues**
+   - Check `idangerous_sms.log`
+   - Verify cron is running
+   - Ensure message header is configured
+
+2. **Lock Mechanism**
+   - Processing lock expires after 1 hour
+   - Check if process is stuck with: `php bin/magento idangerous:sms:status`
+
+## Database Tables
+
+- `iys_data`: Stores recipient information
+- `idangerous_bulk_sms`: SMS campaigns
+- `idangerous_bulk_sms_detail`: Individual SMS records (2-month retention)
+
 ## Support
 
-For issues and feature requests, please:
-1. Check the logs
-2. Review configuration
-3. Contact module support
+For technical support:
+1. Check the logs at `var/log/idangerous_sms.log`
+2. Verify configuration in admin panel
+3. Ensure proper permissions are set
 
 ## License
 
 [MIT License](LICENSE.md)
+
+[Developer: Orkan Köylü](https://github.com/orkank)

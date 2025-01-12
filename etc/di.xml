@@ -32,4 +32,10 @@
             <argument name="logger" xsi:type="object">IDangerousSmsLogger</argument>
         </arguments>
     </type>
+
+    <type name="IDangerous\Sms\Cron\ProcessBulkSms">
+        <arguments>
+            <argument name="lockManager" xsi:type="object">Magento\Framework\Lock\Backend\Database</argument>
+        </arguments>
+    </type>
 </config>

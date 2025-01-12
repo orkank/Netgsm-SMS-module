@@ -7,7 +7,7 @@ use IDangerous\Sms\Model\SmsSession;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
-use IDangerous\Sms\Model\SmsService;
+use IDangerous\Sms\Model\Api\SmsService;
 use Magento\Framework\Controller\ResultFactory;
 
 class SendPost extends Action

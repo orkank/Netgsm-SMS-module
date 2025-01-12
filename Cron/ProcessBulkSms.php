@@ -11,9 +11,13 @@ use IDangerous\Sms\Model\Source\Status;
 use IDangerous\Sms\Model\SmsService;
 use IDangerous\Sms\Model\BulkSmsDetailFactory;
 use IDangerous\Sms\Model\ResourceModel\BulkSmsDetail as BulkSmsDetailResource;
+use Magento\Framework\Lock\LockManagerInterface;
 
 class ProcessBulkSms
 {
+    private const LOCK_NAME = 'idangerous_sms_bulk_processing';
+    private const LOCK_TIMEOUT = 7200; // 2 hours
+
     /**
      * @var LoggerInterface
      */
@@ -50,6 +54,11 @@ class ProcessBulkSms
     private $bulkSmsDetailResource;
 
     /**
+     * @var LockManagerInterface
+     */
+    private $lockManager;
+
+    /**
      * @param LoggerInterface $logger
      * @param CollectionFactory $bulkSmsCollectionFactory
      * @param BulkRecipientService $recipientService
@@ -57,6 +66,7 @@ class ProcessBulkSms
      * @param SmsService $smsService
      * @param BulkSmsDetailFactory $bulkSmsDetailFactory
      * @param BulkSmsDetailResource $bulkSmsDetailResource
+     * @param LockManagerInterface $lockManager
      */
     public function __construct(
         LoggerInterface $logger,
@@ -65,7 +75,8 @@ class ProcessBulkSms
         Json $json,
         SmsService $smsService,
         BulkSmsDetailFactory $bulkSmsDetailFactory,
-        BulkSmsDetailResource $bulkSmsDetailResource
+        BulkSmsDetailResource $bulkSmsDetailResource,
+        LockManagerInterface $lockManager
     ) {
         $this->logger = $logger;
         $this->bulkSmsCollectionFactory = $bulkSmsCollectionFactory;
@@ -74,6 +85,7 @@ class ProcessBulkSms
         $this->smsService = $smsService;
         $this->bulkSmsDetailFactory = $bulkSmsDetailFactory;
         $this->bulkSmsDetailResource = $bulkSmsDetailResource;
+        $this->lockManager = $lockManager;
     }
 
     /**
@@ -83,6 +95,12 @@ class ProcessBulkSms
      */
     public function execute()
     {
+        // Try to acquire lock
+        if (!$this->lockManager->lock(self::LOCK_NAME, self::LOCK_TIMEOUT)) {
+            $this->logger->info('Bulk SMS processing is already running. Skipping this execution.');
+            return;
+        }
+
         try {
             $this->logger->info('Starting bulk SMS processing...');
 
@@ -105,6 +123,9 @@ class ProcessBulkSms
             $this->logger->info('Bulk SMS processing completed.');
         } catch (\Exception $e) {
             $this->logger->error('Error in bulk SMS cron: ' . $e->getMessage());
+        } finally {
+            // Always release the lock when done
+            $this->lockManager->unlock(self::LOCK_NAME);
         }
     }
 
@@ -135,6 +156,7 @@ class ProcessBulkSms
             try {
                 // Create detail record first
                 $detail = $this->bulkSmsDetailFactory->create();
+
                 $detail->setData([
                     'bulk_sms_id' => $bulkSms->getId(),
                     'phone' => $recipient['subscriber_phone'],
@@ -149,12 +171,12 @@ class ProcessBulkSms
                 ));
 
                 $customerData = [
-                    'firstname' => $recipient['firstname'],
-                    'lastname' => $recipient['lastname'],
-                    'email' => $recipient['email'],
-                    'dob' => $recipient['dob'],
-                    'gender' => $recipient['gender'],
-                    'telephone' => $recipient['subscriber_phone']
+                  'firstname' => $recipient['firstname'],
+                  'lastname' => $recipient['lastname'],
+                  'email' => $recipient['email'],
+                  'dob' => $recipient['dob'] ?? '',
+                  'gender' => $recipient['gender'] ?? '',
+                  'telephone' => $recipient['subscriber_phone']
                 ];
 
                 $result = $this->smsService->send(
