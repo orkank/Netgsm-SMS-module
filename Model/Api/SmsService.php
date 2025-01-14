@@ -363,14 +363,8 @@ class SmsService implements SmsServiceInterface
                 ];
             }
 
-            // Clean and format phone number
-            $phone = preg_replace('/[^0-9]/', '', $phone);
-            if (strlen($phone) !== 10) {
-                return [
-                    'success' => false,
-                    'message' => __('Invalid phone number format. Must be 10 digits.')
-                ];
-            }
+            // Format phone number
+            $phone = $this->formatPhoneNumber($phone);
 
             // Build XML string directly
             $xml = '<?xml version="1.0"?>
@@ -401,6 +395,36 @@ class SmsService implements SmsServiceInterface
                 'message' => __('Failed to send OTP SMS: %1', $e->getMessage())
             ];
         }
+    }
+
+    /**
+     * Format phone number to 10 digits
+     *
+     * @param string $phone
+     * @return string
+     * @throws \Exception
+     */
+    private function formatPhoneNumber(string $phone): string
+    {
+        // Remove all non-digit characters
+        $phone = preg_replace('/\D/', '', $phone);
+
+        // Remove leading 90 if exists
+        if (str_starts_with($phone, '90')) {
+            $phone = substr($phone, 2);
+        }
+
+        // Remove leading 0 if exists
+        if (str_starts_with($phone, '0')) {
+            $phone = substr($phone, 1);
+        }
+
+        // Validate phone number length
+        if (strlen($phone) !== 10) {
+            throw new \Exception(__('Phone number must be 10 digits.'));
+        }
+
+        return $phone;
     }
 
     /**

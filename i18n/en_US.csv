@@ -20,16 +20,31 @@ Gender,Gender
 "Bulk SMS job has been created for %1 recipients.","Bulk SMS job has been created for %1 recipients."
 "Send SMS","Send SMS"
 "Phone number and message are required.","Phone number and message are required."
-"Failed to send SMS.","Failed to send SMS."
-"SMS sent successfully.","SMS sent successfully."
-"An error occurred while sending SMS.","An error occurred while sending SMS."
-"NetGSM password is not configured. Please check your IYS module configuration.","NetGSM password is not configured. Please check your IYS module configuration."
+message,message
 "SMS sent successfully","SMS sent successfully"
+(OTP),(OTP)
+"An error occurred while sending the SMS.","An error occurred while sending the SMS."
+"NetGSM password is not configured. Please check your IYS module configuration.","NetGSM password is not configured. Please check your IYS module configuration."
 "Invalid username or password","Invalid username or password"
 "Invalid message header","Invalid message header"
 "Invalid phone number format","Invalid phone number format"
 "Error code: %1","Error code: %1"
 "Failed to send SMS: %1","Failed to send SMS: %1"
+"Phone numbers and message are required.","Phone numbers and message are required."
+"Failed to send bulk SMS: %1","Failed to send bulk SMS: %1"
+"Messages array is required.","Messages array is required."
+"Failed to send multiple SMS: %1","Failed to send multiple SMS: %1"
+"Failed to send OTP SMS: %1","Failed to send OTP SMS: %1"
+"Phone number must be 10 digits.","Phone number must be 10 digits."
+"OTP SMS sent successfully","OTP SMS sent successfully"
+"Invalid message text or length","Invalid message text or length"
+"Invalid phone number","Invalid phone number"
+"No OTP SMS package defined for account","No OTP SMS package defined for account"
+"Invalid input parameters","Invalid input parameters"
+"Rate limit exceeded (max 100 per minute)","Rate limit exceeded (max 100 per minute)"
+"System error","System error"
+"Unknown error code: %1","Unknown error code: %1"
+"Failed to parse OTP response","Failed to parse OTP response"
 "IDangerous credentials are not configured.","IDangerous credentials are not configured."
 "Invalid message content","Invalid message content"
 "Invalid username/password","Invalid username/password"
@@ -41,6 +56,7 @@ Sent,Sent
 Failed,Failed
 Processing,Processing
 Completed,Completed
+"Bulk ID is required","Bulk ID is required"
 "View Details","View Details"
 Cancel,Cancel
 "Cancel Bulk SMS","Cancel Bulk SMS"
@@ -67,6 +83,8 @@ All,All
 "The SMS module is currently disabled. Please enable it in the configuration.","The SMS module is currently disabled. Please enable it in the configuration."
 "Send Single SMS","Send Single SMS"
 "Format: 5XXXXXXXXXX","Format: 5XXXXXXXXXX"
+"Send as OTP","Send as OTP"
+"Send this message as an OTP verification code","Send this message as an OTP verification code"
 "Message Header: %1","Message Header: %1"
 "Message Status","Message Status"
 Close,Close
@@ -77,9 +95,10 @@ Operator,Operator
 "Delivery Date","Delivery Date"
 "Job ID","Job ID"
 Error,Error
-SMS,SMS
+"OTP messages must be less than 160 characters.","OTP messages must be less than 160 characters."
+iDangerous,iDangerous
 "Send Bulk SMS","Send Bulk SMS"
-"IDangerous","IDangerous"
+IDangerous,IDangerous
 "SMS Settings","SMS Settings"
 "General Configuration","General Configuration"
 "Enable Module","Enable Module"
