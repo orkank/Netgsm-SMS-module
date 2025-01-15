@@ -96,10 +96,10 @@ class ProcessBulkSms
     public function execute()
     {
         // Try to acquire lock
-        if (!$this->lockManager->lock(self::LOCK_NAME, self::LOCK_TIMEOUT)) {
-            $this->logger->info('Bulk SMS processing is already running. Skipping this execution.');
-            return;
-        }
+        // if (!$this->lockManager->lock(self::LOCK_NAME, self::LOCK_TIMEOUT)) {
+        //     $this->logger->info('Bulk SMS processing is already running. Skipping this execution.');
+        //     return;
+        // }
 
         try {
             $this->logger->info('Starting bulk SMS processing...');
@@ -112,6 +112,7 @@ class ProcessBulkSms
                 try {
                     $this->processBulkSms($bulkSms);
                 } catch (\Exception $e) {
+                  die($e->getMessage());
                     $this->logger->error('Error processing bulk SMS ID: ' . $bulkSms->getId() . ' - ' . $e->getMessage());
 
                     // Update job status to failed
@@ -170,6 +171,14 @@ class ProcessBulkSms
                     $recipient['subscriber_phone']
                 ));
 
+                $recipient = array_merge($recipient, [
+                  'firstname' => '',
+                  'lastname' => '',
+                  'email' => '',
+                  'dob' => '',
+                  'gender' => ''
+                ]);
+
                 $customerData = [
                   'firstname' => $recipient['firstname'],
                   'lastname' => $recipient['lastname'],
@@ -178,6 +187,7 @@ class ProcessBulkSms
                   'gender' => $recipient['gender'] ?? '',
                   'telephone' => $recipient['subscriber_phone']
                 ];
+
 
                 $result = $this->smsService->send(
                     $recipient['subscriber_phone'],
@@ -203,7 +213,6 @@ class ProcessBulkSms
                     'message' => $e->getMessage()
                 ];
 
-                // Update detail record with error
                 if ($detail && $detail->getId()) {
                     $detail->setStatus('error');
                     $detail->setErrorMessage($e->getMessage());
