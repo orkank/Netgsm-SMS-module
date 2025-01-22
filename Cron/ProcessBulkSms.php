@@ -17,6 +17,8 @@ class ProcessBulkSms
 {
     private const LOCK_NAME = 'idangerous_sms_bulk_processing';
     private const LOCK_TIMEOUT = 7200; // 2 hours
+    private const LOCK_REFRESH_INTERVAL = 300; // 5 minutes in seconds
+    private $lastLockRefresh;
 
     /**
      * @var LoggerInterface
@@ -96,10 +98,12 @@ class ProcessBulkSms
     public function execute()
     {
         // Try to acquire lock
-        // if (!$this->lockManager->lock(self::LOCK_NAME, self::LOCK_TIMEOUT)) {
-        //     $this->logger->info('Bulk SMS processing is already running. Skipping this execution.');
-        //     return;
-        // }
+        if (!$this->lockManager->lock(self::LOCK_NAME, self::LOCK_TIMEOUT)) {
+            $this->logger->info('Bulk SMS processing is already running. Skipping this execution.');
+            return;
+        }
+
+        $this->lastLockRefresh = time();
 
         try {
             $this->logger->info('Starting bulk SMS processing...');
@@ -111,8 +115,11 @@ class ProcessBulkSms
             foreach ($collection as $bulkSms) {
                 try {
                     $this->processBulkSms($bulkSms);
+
+                    // Refresh lock if needed
+                    $this->refreshLockIfNeeded();
+
                 } catch (\Exception $e) {
-                  die($e->getMessage());
                     $this->logger->error('Error processing bulk SMS ID: ' . $bulkSms->getId() . ' - ' . $e->getMessage());
 
                     // Update job status to failed
@@ -131,6 +138,30 @@ class ProcessBulkSms
     }
 
     /**
+     * Refresh lock if needed
+     *
+     * @return void
+     */
+    private function refreshLockIfNeeded()
+    {
+        $currentTime = time();
+
+        if (($currentTime - $this->lastLockRefresh) >= self::LOCK_REFRESH_INTERVAL) {
+            $this->logger->info('Refreshing bulk SMS processing lock...');
+
+            // Release and re-acquire the lock
+            $this->lockManager->unlock(self::LOCK_NAME);
+
+            if (!$this->lockManager->lock(self::LOCK_NAME, self::LOCK_TIMEOUT)) {
+                throw new \RuntimeException('Failed to refresh bulk SMS processing lock.');
+            }
+
+            $this->lastLockRefresh = $currentTime;
+            $this->logger->info('Bulk SMS processing lock refreshed successfully.');
+        }
+    }
+
+    /**
      * Process individual bulk SMS job
      *
      * @param \IDangerous\Sms\Model\BulkSms $bulkSms
@@ -140,8 +171,8 @@ class ProcessBulkSms
     {
         // Update status to processing
         if ($bulkSms->getStatus() === Status::STATUS_PENDING) {
-          $bulkSms->setStatus(Status::STATUS_PROCESSING);
-          $bulkSms->save();
+            $bulkSms->setStatus(Status::STATUS_PROCESSING);
+            $bulkSms->save();
         }
 
         // Get recipients
@@ -155,6 +186,9 @@ class ProcessBulkSms
 
         foreach ($recipients as $recipient) {
             try {
+                // Refresh lock if needed during recipient processing
+                $this->refreshLockIfNeeded();
+
                 // Create detail record first
                 $detail = $this->bulkSmsDetailFactory->create();
 
