@@ -20,7 +20,23 @@
                     <comment>Your message header (3-11 characters)</comment>
                     <validate>validate-length minimum-length-3 maximum-length-11</validate>
                 </field>
-                <field id="debug_logging" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="username" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Username</label>
+                    <comment>Netgsm username. If provided, overrides the Netgsm IYS module configuration.</comment>
+                </field>
+                <field id="password" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Password</label>
+                    <comment>Netgsm password in plain text. If provided, overrides the Netgsm IYS module configuration.</comment>
+                </field>
+                <field id="brand_code" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Brand Code</label>
+                    <comment>Netgsm brand code. If provided, overrides the Netgsm IYS module configuration.</comment>
+                </field>
+                <field id="app_key" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>App Key</label>
+                    <comment>Netgsm app key. If provided, overrides the Netgsm IYS module configuration.</comment>
+                </field>
+                <field id="debug_logging" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Debug Logging</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
