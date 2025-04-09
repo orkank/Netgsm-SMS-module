@@ -9,7 +9,6 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
-use IDangerous\NetgsmIYS\Helper\Config as IysConfig;
 use IDangerous\Sms\Helper\Config;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -36,11 +35,6 @@ class SmsService implements SmsServiceInterface
     private $scopeConfig;
 
     /**
-     * @var IysConfig
-     */
-    private $iysConfig;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -55,15 +49,13 @@ class SmsService implements SmsServiceInterface
         ScopeConfigInterface $scopeConfig,
         LoggerInterface $logger,
         StoreManagerInterface $storeManager,
-        Config $config,
-        IysConfig $iysConfig
+        Config $config
     ) {
         $this->curl = $curl;
         $this->scopeConfig = $scopeConfig;
         $this->logger = $logger;
         $this->storeManager = $storeManager;
         $this->config = $config;
-        $this->iysConfig = $iysConfig;
     }
 
     /**
@@ -108,9 +100,9 @@ class SmsService implements SmsServiceInterface
         }
 
         try {
-            $username = $this->iysConfig->getUsername();
-            $password = $this->iysConfig->getPassword();
-            $brandCode = $this->iysConfig->getBrandCode();
+            $username = $this->config->getUsername();
+            $password = $this->config->getPassword();
+            $brandCode = $this->config->getMsgHeader();
 
             if (empty($username) || empty($password)) {
                 throw new LocalizedException(__('IDangerous credentials are not configured.'));
@@ -216,18 +208,14 @@ class SmsService implements SmsServiceInterface
         }
 
         $sender = $this->config->getMsgHeader();
-
-        $username = $this->iysConfig->getUsername();
-        $password = $this->iysConfig->getPassword();
-        $sender = $this->config->getMsgHeader();
+        $username = $this->config->getUsername();
+        $password = $this->config->getPassword();
 
         try {
             $storeId = $this->storeManager->getStore()->getId();
 
             if (empty($username) || empty($password)) {
                 $this->logger->error('IDangerous credentials not found', [
-                    'username_path' => self::XML_PATH_USERNAME,
-                    'password_path' => self::XML_PATH_PASSWORD,
                     'store_id' => $storeId
                 ]);
 
@@ -297,8 +285,8 @@ class SmsService implements SmsServiceInterface
     public function getMessageStatus(string $messageId): array
     {
         try {
-            $username = $this->iysConfig->getUsername();
-            $password = $this->iysConfig->getPassword();
+            $username = $this->config->getUsername();
+            $password = $this->config->getPassword();
 
             if (empty($username) || empty($password)) {
                 throw new \Exception('API credentials not configured');
@@ -358,6 +346,7 @@ class SmsService implements SmsServiceInterface
             '11' => 'Not Accepted by Operator',
             '12' => 'Sending Error',
             '13' => 'Duplicate',
+            '14' => 'Kredi Yetersiz',
             '15' => 'Blacklisted',
             '16' => 'IYS Rejected',
             '17' => 'IYS Error'
@@ -372,8 +361,8 @@ class SmsService implements SmsServiceInterface
             '10' => 'Vodafone',
             '20' => 'Türk Telekom',
             '30' => 'Turkcell',
-            '40' => 'IDangerous STH',
-            '41' => 'IDangerous Mobile',
+            '40' => 'STH',
+            '41' => 'Mobile',
             '60' => 'Türk Telekom Fixed',
             '70' => 'Unknown Operator',
             '160' => 'KKTC Vodafone',

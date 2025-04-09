@@ -253,11 +253,15 @@ class ProcessBulkSms
                     $this->bulkSmsDetailResource->save($detail);
                 }
 
-                $this->logger->error(sprintf(
+                $error = sprintf(
                     'Failed to send SMS to %s: %s',
                     $recipient['subscriber_phone'],
                     $e->getMessage()
-                ));
+                );
+
+                echo $error . PHP_EOL;
+
+                $this->logger->error($error);
             }
 
             $processedCount++;

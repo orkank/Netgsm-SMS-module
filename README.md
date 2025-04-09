@@ -55,9 +55,9 @@ php bin/magento cache:clean
 
 ## Terminal Commands
 
-Process pending SMS jobs manually:
+l jobs manually:
 ```bash
-php bin/magento idangerous:sms:process
+php bin/magento idangerous:sms:run
 ```
 
 Clean old SMS records (older than 2 months):
