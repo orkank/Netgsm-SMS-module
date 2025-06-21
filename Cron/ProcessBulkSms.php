@@ -267,9 +267,9 @@ class ProcessBulkSms
             $processedCount++;
 
             // Update progress periodically
-            if ($processedCount % 100 === 0) {
-                $this->updateProgress($bulkSms, $processedCount, $successCount, $errorCount);
-            }
+            // if ($processedCount % 100 === 0) {
+            $this->updateProgress($bulkSms, $processedCount, $successCount, $errorCount);
+            // }
         }
 
         // Final update

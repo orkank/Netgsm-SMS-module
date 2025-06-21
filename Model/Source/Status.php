@@ -11,6 +11,7 @@ class Status implements OptionSourceInterface
     const STATUS_PROCESSING = 'processing';
     const STATUS_COMPLETED = 'completed';
     const STATUS_FAILED = 'failed';
+    const STATUS_CANCELLED = 'cancelled';
 
     /**
      * Get options
@@ -23,7 +24,8 @@ class Status implements OptionSourceInterface
             ['value' => self::STATUS_PENDING, 'label' => __('Pending')],
             ['value' => self::STATUS_PROCESSING, 'label' => __('Processing')],
             ['value' => self::STATUS_COMPLETED, 'label' => __('Completed')],
-            ['value' => self::STATUS_FAILED, 'label' => __('Failed')]
+            ['value' => self::STATUS_FAILED, 'label' => __('Failed')],
+            ['value' => self::STATUS_CANCELLED, 'label' => __('Cancelled')]
         ];
     }
 }

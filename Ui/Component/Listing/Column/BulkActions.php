@@ -41,20 +41,24 @@ class BulkActions extends Column
                             ['bulk_id' => $item['entity_id']]
                         ),
                         'label' => __('View Details')
-                    ],
-                    'cancel' => [
+                    ]
+                ];
+
+                // Only show cancel action for pending status
+                if ($item['status'] === 'pending' || $item['status'] === 'processing') {
+                    $item[$this->getData('name')]['cancel'] = [
                         'href' => $this->urlBuilder->getUrl(
                             'idangerous_sms/bulk/cancel',
                             ['bulk_id' => $item['entity_id']]
                         ),
                         'label' => __('Cancel'),
-                        'hidden' => $item['status'] !== 'pending',
+                        'post' => true,
                         'confirm' => [
                             'title' => __('Cancel Bulk SMS'),
-                            'message' => __('Are you sure you want to cancel this bulk SMS?')
+                            'message' => __('Are you sure you want to cancel this bulk SMS? This action cannot be undone.')
                         ]
-                    ]
-                ];
+                    ];
+                }
             }
         }
 

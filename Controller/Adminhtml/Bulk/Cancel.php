@@ -5,7 +5,6 @@ namespace IDangerous\Sms\Controller\Adminhtml\Bulk;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\Controller\Result\JsonFactory;
 use IDangerous\Sms\Model\ResourceModel\BulkSms as BulkSmsResource;
 use IDangerous\Sms\Model\BulkSmsFactory;
 
@@ -14,35 +13,28 @@ class Cancel extends Action
     const ADMIN_RESOURCE = 'IDangerous_Sms::bulk_sms';
 
     /**
-     * @var JsonFactory
-     */
-    private $resultJsonFactory;
-
-    /**
      * @var BulkSmsResource
      */
-    private $bulkSmsResource;
+    protected $bulkSmsResource;
 
     /**
      * @var BulkSmsFactory
      */
-    private $bulkSmsFactory;
+    protected $bulkSmsFactory;
 
     public function __construct(
         Context $context,
-        JsonFactory $resultJsonFactory,
         BulkSmsResource $bulkSmsResource,
         BulkSmsFactory $bulkSmsFactory
     ) {
         parent::__construct($context);
-        $this->resultJsonFactory = $resultJsonFactory;
         $this->bulkSmsResource = $bulkSmsResource;
         $this->bulkSmsFactory = $bulkSmsFactory;
     }
 
     public function execute()
     {
-        $resultJson = $this->resultJsonFactory->create();
+        $resultRedirect = $this->resultRedirectFactory->create();
 
         try {
             $bulkId = (int)$this->getRequest()->getParam('bulk_id');
@@ -57,22 +49,19 @@ class Cancel extends Action
                 throw new \Exception(__('Bulk SMS not found'));
             }
 
-            if ($bulkSms->getStatus() !== 'pending') {
-                throw new \Exception(__('Only pending bulk SMS can be cancelled'));
+            if ($bulkSms->getStatus() !== 'pending' && $bulkSms->getStatus() !== 'processing') {
+                throw new \Exception(__('Only pending or processing bulk SMS can be cancelled'));
             }
 
             $bulkSms->setStatus('cancelled');
             $this->bulkSmsResource->save($bulkSms);
 
-            return $resultJson->setData([
-                'success' => true,
-                'message' => __('Bulk SMS has been cancelled.')
-            ]);
+            $this->messageManager->addSuccessMessage(__('Bulk SMS has been cancelled successfully.'));
+
         } catch (\Exception $e) {
-            return $resultJson->setData([
-                'success' => false,
-                'message' => $e->getMessage()
-            ]);
+            $this->messageManager->addErrorMessage($e->getMessage());
         }
+
+        return $resultRedirect->setPath('*/*/dashboard');
     }
 }
