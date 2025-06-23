@@ -89,6 +89,23 @@ class BulkSmsRetryService
 
         foreach ($collection as $detail) {
             try {
+                // Check if this phone number already has a successful record in this bulk SMS
+                $successfulRecord = $this->detailCollectionFactory->create()
+                    ->addFieldToFilter('bulk_sms_id', $bulkSmsId)
+                    ->addFieldToFilter('phone', $detail->getPhone())
+                    ->addFieldToFilter('status', 'success')
+                    ->getFirstItem();
+
+                if ($successfulRecord->getId()) {
+                    $this->logger->info(sprintf(
+                        'Phone %s already has successful SMS in bulk %d, skipping retry for Detail ID: %d',
+                        $detail->getPhone(),
+                        $bulkSmsId,
+                        $detail->getId()
+                    ));
+                    continue;
+                }
+
                 $this->logger->info(sprintf(
                     'Retrying SMS for Detail ID: %d, Phone: %s',
                     $detail->getId(),

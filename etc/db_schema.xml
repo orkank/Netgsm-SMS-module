@@ -54,6 +54,11 @@
         <index referenceId="NETGSM_BULK_SMS_DETAIL_STATUS">
             <column name="status"/>
         </index>
+        <index referenceId="NETGSM_BULK_SMS_DETAIL_BULK_SMS_ID_PHONE_STATUS">
+            <column name="bulk_sms_id"/>
+            <column name="phone"/>
+            <column name="status"/>
+        </index>
         <index referenceId="NETGSM_BULK_SMS_DETAIL_MESSAGE_ID">
             <column name="message_id"/>
         </index>

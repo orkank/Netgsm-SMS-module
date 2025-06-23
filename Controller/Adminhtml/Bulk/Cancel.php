@@ -49,7 +49,7 @@ class Cancel extends Action
                 throw new \Exception(__('Bulk SMS not found'));
             }
 
-            if ($bulkSms->getStatus() !== 'pending' && $bulkSms->getStatus() !== 'processing') {
+            if ($bulkSms->getStatus() !== 'pending') {
                 throw new \Exception(__('Only pending or processing bulk SMS can be cancelled'));
             }
 

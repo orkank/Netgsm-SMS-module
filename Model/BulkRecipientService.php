@@ -67,7 +67,8 @@ class BulkRecipientService
                 ->where('main_table.status = ?', 1)
                 ->where('main_table.iys_status = ?', 1)
                 ->where('main_table.value IS NOT NULL')
-                ->where('main_table.value != ?', '');
+                ->where('main_table.value != ?', '')
+                ->group('main_table.value'); // Always group by phone number to prevent duplicates
 
             // Add customer type filter
             $customerType = $filters['customer_type'] ?? 'all';
@@ -147,8 +148,7 @@ class BulkRecipientService
                     ['sales_order' => $salesOrderTable],
                     'customer.entity_id = sales_order.customer_id',
                     []
-                )
-                ->group('main_table.value');
+                );
 
                 // Apply order period filter
                 if (!empty($filters['order_period'])) {

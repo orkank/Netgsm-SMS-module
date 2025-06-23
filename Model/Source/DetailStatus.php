@@ -8,8 +8,9 @@ use Magento\Framework\Data\OptionSourceInterface;
 class DetailStatus implements OptionSourceInterface
 {
     const STATUS_PENDING = 'pending';
-    const STATUS_SENT = 'sent';
-    const STATUS_FAILED = 'failed';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_SUCCESS = 'success';
+    const STATUS_ERROR = 'error';
 
     /**
      * @return array
@@ -18,8 +19,9 @@ class DetailStatus implements OptionSourceInterface
     {
         return [
             ['value' => self::STATUS_PENDING, 'label' => __('Pending')],
-            ['value' => self::STATUS_SENT, 'label' => __('Sent')],
-            ['value' => self::STATUS_FAILED, 'label' => __('Failed')]
+            ['value' => self::STATUS_PROCESSING, 'label' => __('Processing')],
+            ['value' => self::STATUS_SUCCESS, 'label' => __('Success')],
+            ['value' => self::STATUS_ERROR, 'label' => __('Error')]
         ];
     }
 }

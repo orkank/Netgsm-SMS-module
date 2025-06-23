@@ -6,6 +6,7 @@
             <argument name="commands" xsi:type="array">
                 <item name="idangerous_sms_run" xsi:type="object">IDangerous\Sms\Console\Command\RunBulkSms</item>
                 <item name="idangerous_sms_retry" xsi:type="object">IDangerous\Sms\Console\Command\RetryFailedSms</item>
+                <item name="idangerous_sms_check_duplicates" xsi:type="object">IDangerous\Sms\Console\Command\CheckDuplicates</item>
             </argument>
         </arguments>
     </type>
@@ -36,6 +37,33 @@
     <type name="IDangerous\Sms\Cron\ProcessBulkSms">
         <arguments>
             <argument name="lockManager" xsi:type="object">Magento\Framework\Lock\Backend\Database</argument>
+        </arguments>
+    </type>
+
+    <!-- Configure grid collection for bulk SMS detail -->
+    <virtualType name="IDangerousSmsDetailGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Configure data provider for bulk SMS detail grid -->
+    <virtualType name="IDangerousSmsDetailGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">IDangerous\Sms\Model\ResourceModel\BulkSmsDetail\Grid\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">IDangerousSmsDetailGridFilterPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Map the data provider to the grid -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="idangerous_sms_bulk_detail_listing_data_source" xsi:type="string">IDangerous\Sms\Model\ResourceModel\BulkSmsDetail\Grid\Collection</item>
+            </argument>
         </arguments>
     </type>
 </config>

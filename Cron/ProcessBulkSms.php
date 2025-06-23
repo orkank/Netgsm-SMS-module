@@ -183,11 +183,44 @@ class ProcessBulkSms
         $successCount = 0;
         $errorCount = 0;
         $processedCount = 0;
+        $processedPhones = []; // Track processed phone numbers to prevent duplicates
 
         foreach ($recipients as $recipient) {
             try {
+                // Skip if phone number was already processed in this batch
+                $phone = $recipient['subscriber_phone'];
+                if (in_array($phone, $processedPhones)) {
+                    $this->logger->info(sprintf(
+                        'Skipping duplicate phone number: %s',
+                        $phone
+                    ));
+                    continue;
+                }
+                $processedPhones[] = $phone;
+
                 // Refresh lock if needed during recipient processing
                 $this->refreshLockIfNeeded();
+
+                // Check if SMS was already sent to this phone number in this bulk SMS job
+                $connection = $this->bulkSmsDetailResource->getConnection();
+                $existingRecord = $connection->fetchRow(
+                    $connection->select()
+                        ->from($this->bulkSmsDetailResource->getMainTable())
+                        ->where('bulk_sms_id = ?', $bulkSms->getId())
+                        ->where('phone = ?', $recipient['subscriber_phone'])
+                        ->where('status IN (?)', ['success', 'pending', 'processing'])
+                        ->limit(1)
+                );
+
+                if ($existingRecord) {
+                    $this->logger->info(sprintf(
+                        'SMS already sent or being processed for phone %s in bulk SMS %d (status: %s), skipping',
+                        $recipient['subscriber_phone'],
+                        $bulkSms->getId(),
+                        $existingRecord['status']
+                    ));
+                    continue;
+                }
 
                 // Create detail record first
                 $detail = $this->bulkSmsDetailFactory->create();
